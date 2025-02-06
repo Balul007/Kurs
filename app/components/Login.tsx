@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithGoogle, registerWithEmail, loginWithEmail } from "../firebase";
+import { signInWithGoogle, registerWithEmail, loginWithEmail } from "app/lib/firebase";
 
 export default function Login({ onLogin }: { onLogin: () => void }) {
   const [view, setView] = useState<'login' | 'register'>('login');

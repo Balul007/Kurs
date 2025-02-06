@@ -1,63 +1,147 @@
 "use client";
-
-import { useState, useEffect, useRef } from "react";
-import { FaUserCircle, FaCog, FaSignOutAlt, FaPalette } from "react-icons/fa";
+import { useState } from "react";
+import { FaUserCircle, FaCog, FaSignOutAlt, FaBook, FaGraduationCap, FaCheckCircle, FaChevronDown } from "react-icons/fa";
 import Link from "next/link";
 
-export default function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
+interface Course {
+  id: string;
+  title: string;
+  status: 'active' | 'available' | 'completed';
+}
+
+interface SidebarProps {
+  onLogout: () => void;
+  user: any;
+}
+
+export default function Sidebar({ onLogout, user }: SidebarProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [openMenus, setOpenMenus] = useState({
+    active: true,
+    available: false,
+    completed: false
+  });
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowUserMenu(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // Exempel på kursdata - ersätt med din faktiska data
+  const courses: Course[] = [
+    { id: '1', title: 'Introduktion till React', status: 'active' },
+    { id: '2', title: 'Next.js Grundkurs', status: 'active' },
+    { id: '3', title: 'TypeScript för Nybörjare', status: 'available' },
+    { id: '4', title: 'HTML & CSS', status: 'completed' }
+  ];
 
-  useEffect(() => {
-    document.body.classList.toggle("dark", darkMode);
-  }, [darkMode]);
+  const toggleMenu = (menu: keyof typeof openMenus) => {
+    setOpenMenus(prev => ({
+      ...prev,
+      [menu]: !prev[menu]
+    }));
+  };
 
   return (
-    <aside className={`w-64 p-4 relative ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-800 text-white'}`}>
-      <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowUserMenu(!showUserMenu)}>
-        <FaUserCircle size={32} />
-        <div className="ml-2">
-          <p className="font-bold">{user ? user.displayName || user.email : "Gäst"}</p>
-          <p className="text-sm text-gray-400">{user?.email}</p>
+    <aside className="w-64 min-h-screen bg-gray-800 text-white p-4">
+      {/* Användarprofil */}
+      <div className="mb-8">
+        <div 
+          className="flex items-center p-3 bg-gray-700 rounded-lg cursor-pointer"
+          onClick={() => setShowUserMenu(!showUserMenu)}
+        >
+          <FaUserCircle size={40} className="text-gray-300" />
+          <div className="ml-3 overflow-hidden">
+            <p className="font-medium truncate">{user?.displayName || 'Användare'}</p>
+            <p className="text-sm text-gray-400 truncate">{user?.email}</p>
+          </div>
+          <FaChevronDown className={`ml-auto transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
         </div>
+        
+        {showUserMenu && (
+          <div className="mt-2 py-2 bg-gray-700 rounded-lg">
+            <Link href="/settings">
+              <div className="flex items-center px-4 py-2 hover:bg-gray-600 cursor-pointer">
+                <FaCog className="mr-3" />
+                Inställningar
+              </div>
+            </Link>
+            <div 
+              className="flex items-center px-4 py-2 hover:bg-gray-600 cursor-pointer"
+              onClick={onLogout}
+            >
+              <FaSignOutAlt className="mr-3" />
+              Logga ut
+            </div>
+          </div>
+        )}
       </div>
-      {showUserMenu && (
-        <div ref={menuRef} className="absolute top-12 left-0 bg-gray-700 w-full rounded shadow-lg">
-<Link href="/Settings">
-  <button className="w-full flex items-center p-2 hover:bg-gray-600">
-    <FaCog className="mr-2" /> Inställningar
-  </button>
-</Link>
 
-
-          <button 
-            className="w-full flex items-center p-2 hover:bg-gray-600" 
-            onClick={() => setDarkMode(!darkMode)}>
-            <FaPalette className="mr-2" /> {darkMode ? "Ljust läge" : "Mörkt läge"}
+      {/* Kurssektioner */}
+      <div className="space-y-4">
+        {/* Aktiva kurser */}
+        <div>
+          <button
+            className="w-full flex items-center justify-between p-3 bg-gray-700 rounded-lg"
+            onClick={() => toggleMenu('active')}
+          >
+            <div className="flex items-center">
+              <FaBook className="mr-3" />
+              <span>Aktiva kurser</span>
+            </div>
+            <FaChevronDown className={`transition-transform ${openMenus.active ? 'rotate-180' : ''}`} />
           </button>
-          <button className="w-full flex items-center p-2 hover:bg-gray-600" onClick={onLogout}>
-            <FaSignOutAlt className="mr-2" /> Logga ut
-          </button>
+          {openMenus.active && (
+            <div className="mt-2 ml-4 space-y-2">
+              {courses.filter(c => c.status === 'active').map(course => (
+                <div key={course.id} className="p-2 hover:bg-gray-700 rounded cursor-pointer">
+                  {course.title}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-      <h2 className="text-lg font-bold mt-6">📚 Kurser</h2>
-      <div>
-        <button className="w-full text-left p-2 bg-gray-700 rounded">📖 Pågående Kurser</button>
-        <button className="w-full text-left p-2 bg-gray-700 rounded">📘 Möjliga Kurser</button>
-        <button className="w-full text-left p-2 bg-gray-700 rounded">📚 Klarade Kurser</button>
+
+        {/* Tillgängliga kurser */}
+        <div>
+          <button
+            className="w-full flex items-center justify-between p-3 bg-gray-700 rounded-lg"
+            onClick={() => toggleMenu('available')}
+          >
+            <div className="flex items-center">
+              <FaGraduationCap className="mr-3" />
+              <span>Tillgängliga kurser</span>
+            </div>
+            <FaChevronDown className={`transition-transform ${openMenus.available ? 'rotate-180' : ''}`} />
+          </button>
+          {openMenus.available && (
+            <div className="mt-2 ml-4 space-y-2">
+              {courses.filter(c => c.status === 'available').map(course => (
+                <div key={course.id} className="p-2 hover:bg-gray-700 rounded cursor-pointer">
+                  {course.title}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Avklarade kurser */}
+        <div>
+          <button
+            className="w-full flex items-center justify-between p-3 bg-gray-700 rounded-lg"
+            onClick={() => toggleMenu('completed')}
+          >
+            <div className="flex items-center">
+              <FaCheckCircle className="mr-3" />
+              <span>Avklarade kurser</span>
+            </div>
+            <FaChevronDown className={`transition-transform ${openMenus.completed ? 'rotate-180' : ''}`} />
+          </button>
+          {openMenus.completed && (
+            <div className="mt-2 ml-4 space-y-2">
+              {courses.filter(c => c.status === 'completed').map(course => (
+                <div key={course.id} className="p-2 hover:bg-gray-700 rounded cursor-pointer">
+                  {course.title}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );

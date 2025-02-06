@@ -1,8 +1,8 @@
-"use client";
 
+"use client";
 import { useState, useEffect } from "react";
-import { getCurrentUser } from "../firebase";
-import Sidebar from "../components/Sidebar";
+import { getCurrentUser } from "../lib/firebase";
+import Sidebar from "./Sidebar";  // eftersom den ligger i samma mapp
 
 export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [user, setUser] = useState<any>(null);
