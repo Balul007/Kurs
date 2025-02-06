@@ -1,0 +1,28 @@
+app/
+ |-- components/
+ |    |-- Sidebar.tsx
+ |    |-- Dashboard.tsx
+ |    |-- CoursePage.tsx
+ |    |-- Quiz.tsx
+ |    |-- ThemeSettings.tsx (För dynamiska UI-ändringar)
+ |
+ |-- pages/
+ |    |-- index.tsx (Login-sidan)
+ |    |-- dashboard.tsx
+ |    |-- course/[id].tsx (Dynamiska kurssidor)
+ |    |-- settings.tsx
+ |
+ |-- lib/
+ |    |-- firebase.ts (Autentisering och databas)
+ |    |-- courses.json (Kursdata om API inte används)
+ |
+ |-- styles/
+ |    |-- globals.css (Globala CSS-stilar)
+ |
+ |-- public/
+ |    |-- images/
+ |    |    |-- logo.png
+ |
+ |-- config/
+ |    |-- tailwind.config.js
+ |    |-- postcss.config.js

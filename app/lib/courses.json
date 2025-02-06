@@ -1,0 +1,37 @@
+{
+    "courses": [
+      {
+        "id": "excel-grundkurs",
+        "title": "Excel Grundkurs",
+        "description": "Lär dig grunderna i Excel.",
+        "lessons": [
+          {
+            "id": "lektion-1",
+            "title": "Introduktion till Excel",
+            "content": "Välkommen till Excel Grundkurs. Här introduceras grunderna i kalkylblad.",
+            "videoUrl": "https://www.example.com/video1.mp4"
+          },
+          {
+            "id": "lektion-2",
+            "title": "Grunder i formler",
+            "content": "I denna lektion lär du dig hur man använder formler.",
+            "videoUrl": "https://www.example.com/video2.mp4"
+          }
+        ]
+      },
+      {
+        "id": "word-avanserad",
+        "title": "Word Avancerad",
+        "description": "Förbättra dina Word-färdigheter med avancerade tekniker.",
+        "lessons": [
+          {
+            "id": "lektion-1",
+            "title": "Avancerade formatmallar",
+            "content": "Denna lektion täcker avancerade formatmallar i Word.",
+            "videoUrl": "https://www.example.com/video3.mp4"
+          }
+        ]
+      }
+    ]
+  }
+  

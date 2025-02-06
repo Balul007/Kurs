@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "app/lib/firebase";
 import Link from "next/link";
-import { FaUser, FaBell, FaPalette, FaLanguage, FaLock } from "react-icons/fa";
+import { FaUser, FaBell, FaLanguage, FaLock } from "react-icons/fa";
+import ThemeSettings from "app/components/ThemeSettings"; // Ny import
 
 export default function Settings() {
   const [user, setUser] = useState<any>(null);
@@ -50,7 +51,7 @@ export default function Settings() {
                     activeTab === 'appearance' ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
                   }`}
                 >
-                  <FaPalette className="mr-3" />
+                  <FaLanguage className="mr-3" />
                   Utseende
                 </button>
                 <button
@@ -122,14 +123,8 @@ export default function Settings() {
               )}
 
               {activeTab === 'appearance' && (
-                <div>
-                  <h2 className="text-xl font-bold mb-4">Utseende</h2>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Mörkt läge</span>
-                      <input type="checkbox" className="form-checkbox" />
-                    </div>
-                  </div>
+                <div className="p-4">
+                  <ThemeSettings />
                 </div>
               )}
 
@@ -161,12 +156,13 @@ export default function Settings() {
         </div>
 
         <div className="mt-4">
-          <Link href="/">
-            <button className="bg-gray-500 text-white px-4 py-2 rounded">
-              Tillbaka till Dashboard
-            </button>
-          </Link>
-        </div>
+  <Link href="/dashboard">
+    <button className="bg-gray-500 text-white px-4 py-2 rounded">
+      Tillbaka till Dashboard
+    </button>
+  </Link>
+</div>
+
       </div>
     </div>
   );
